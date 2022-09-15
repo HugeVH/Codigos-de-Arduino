@@ -1,0 +1,29 @@
+arduino-interrupciones-ejemplo
+HACIENDO PARPADEAR UN LED A TRAVÉS DE INTERRUPCIONES
+En el siguiente código definimos el pin digital 10 como salida, para emular una onda cuadrada de periodo 300ms (150ms ON y 150ms OFF).
+
+Para visualizar el funcionamiento de la interrupción, en cada flanco activo del pulso simulado, encendemos/apagamos el LED integrado en la placa, por lo que el LED parpadea a intervalos de 600ms (300ms ON y 300ms OFF)
+
+Puede que a estas alturas ver parpadear un LED no parezca muy espectacular, pero no es tan simple como parece. No estamos encendiendo el LED con una salida digital, si no que es la interrupción que salta la que enciende y apaga el LED (el pin digital solo emula una señal externa).
+
+const int emuPin = 10;
+const int LEDPin = 13;
+const int intPin = 2;
+volatile int state = LOW;
+void setup() {
+   pinMode(emuPin, OUTPUT);
+   pinMode(LEDPin, OUTPUT);
+   pinMode(intPin, INPUT_PULLUP);
+   attachInterrupt(digitalPinToInterrupt(intPin), blink, CHANGE);
+}
+void loop() {
+   //esta parte es para emular la salida
+   digitalWrite(emuPin, HIGH);
+   delay(150);
+   digitalWrite(emuPin, LOW);
+   delay(150);
+}
+void blink() {
+   state = !state;
+   digitalWrite(LEDPin, state);
+}
